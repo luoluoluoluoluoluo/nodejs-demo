@@ -5,7 +5,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var session = require('express-session');
+var expressSession = require('express-session');
+var MongoStore = require('connect-mongo')(expressSession);
 
 // 加载路由控制
 var routes = require('./routes');
@@ -35,8 +36,14 @@ app.use(cookieParser());
 // 定义静态文件目录
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(express.session());
-app.use(session({secret:'secretKey'}));
+// app.use(express.session());
+// app.use(session({secret:'secretKey'}));
+app.use(expressSession({
+     secret: 'secret',
+     store: new MongoStore(),
+     resave: false,
+     saveUninitialized: true
+}));
 // 匹配路径和路由
 app.use('/', routes);
 app.use('/users', users);
