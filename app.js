@@ -35,8 +35,14 @@ app.use(cookieParser());
 // 定义静态文件目录
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(express.session());
-app.use(session({secret:'secretKey'}));
+// app.use(express.session());
+// app.use(session({secret:'secretKey'}));
+app.use(expressSession({
+     secret: 'secret',
+     store: new MongoStore(),
+     resave: false,
+     saveUninitialized: true
+}));
 // 匹配路径和路由
 app.use('/', routes);
 app.use('/users', users);
